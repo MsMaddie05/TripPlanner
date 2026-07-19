@@ -1,0 +1,24 @@
+.buttonContainer{
+    display: flex;
+    flex-direction: row;
+    width: 100vw;
+    background-color: var(--container-light);
+}
+.button{
+    width: 15vw;
+    background-color: var(--container-light);
+    color: var(--text-dark);
+    border: none;
+    padding: 15px;
+}
+.button:hover{
+    background-color: var(--container-medium);
+    color: var(--text-light);
+}
+.rightFloat{
+    margin-left: auto;
+}
+.active{
+    background-color: var(--container-dark);
+    color: var(--text-light);
+}

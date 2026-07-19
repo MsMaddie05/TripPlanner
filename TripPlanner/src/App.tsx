@@ -7,7 +7,6 @@ import ExploreTrips from "./components/pages/ExploreTrips";
 import Settings from "./components/pages/Settings";
 import Profile from "./components/pages/Profile";
 
-
 import './App.css'
 
 function App() {
