@@ -9,6 +9,7 @@ import ExploreTrips from "./components/pages/ExploreTrips";
 import Settings from "./components/pages/Settings";
 import Profile from "./components/pages/Profile";
 import Login from "./components/pages/Login";
+import SignUp from "./components/pages/SignUp";
 
 import './App.css'
 
@@ -25,7 +26,7 @@ const ProtectedRoute = ({ isAuthenticated } : ProtectedRouteProps ) => {
 }
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   return (
     <>
@@ -36,6 +37,7 @@ function App() {
         }
         <Routes>
           <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
+          <Route path="/signup" element={<SignUp setIsAuthenticated={setIsAuthenticated} />} />
 
           <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} />}>
             <Route path="/" element={<Home />} />
