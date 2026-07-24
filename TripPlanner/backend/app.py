@@ -31,18 +31,25 @@ def login():
     email = data.get('email')
     password = data.get('password')
 
+    # testing to see values
     print(email)
     print(password)
     with db.engine.connect() as conn:
-        res = conn.execute(
+        row = conn.execute(
             select(db.user_table).where(db.user_table.c.email == email)
-        )
+        ).first()
+        print(row)
 
-        rows = res.all()
-        print(len(rows))
-        if (rows):
-            return {"found": True}
-        return {"found": False}
+        # Instantiate User obj
+        User = {
+            "id": row[0], 
+            "email": row[2], 
+            "username": row[1],
+        }
+
+        if (row):
+            return {"found": True, "user": User}
+        return {"found": False, "user": null}
 
 if __name__ == "__main__":
     app.run(debug=True)

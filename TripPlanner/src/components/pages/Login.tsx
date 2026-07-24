@@ -1,12 +1,12 @@
 import {useState} from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../AuthProvider";
 import styles from './Login.module.css';
 
-interface LoginProps {
-    setIsAuthenticated: Function;
-}
 
-const Login = ({ setIsAuthenticated } : LoginProps) => {
+const Login = () => {
+    const { setUser } = useAuth();
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
@@ -22,11 +22,11 @@ const Login = ({ setIsAuthenticated } : LoginProps) => {
             });
 
             const data = await response.json();
-            console.log(data);
+            console.log(data.user);
 
             if (data.found) {
-                setIsAuthenticated(true)
-                navigate('/home')
+                setUser(data.user);
+                navigate('/home');
             }
             else {
                 window.alert("Email or password was not found. Please try again")

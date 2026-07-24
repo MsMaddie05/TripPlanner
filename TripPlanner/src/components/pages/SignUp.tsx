@@ -1,11 +1,8 @@
 import styles from "./SignUp.module.css"
 import { useState } from 'react';
 
-interface SignUpProps {
-    setIsAuthenticated: Function;
-}
 
-const SignUp = ({setIsAuthenticated} : SignUpProps) => {
+const SignUp = () => {
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
