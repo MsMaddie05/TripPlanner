@@ -2,10 +2,18 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import db_creation as db
 from sqlalchemy import insert, select
+import datetime
+import jwt
+import os
 
 # Create Flask server
 app = Flask(__name__)
+
 CORS(app)
+
+# for jwt
+SECRET_KEY = os.getenv("SECRET_KEY")
+ALGORITHM = "HS256"
 
 # Load tables if they don't exist yet
 db.metadata_obj.create_all(db.engine)
@@ -40,16 +48,62 @@ def login():
         ).first()
         print(row)
 
-        # Instantiate User obj
-        User = {
-            "id": row[0], 
-            "email": row[2], 
-            "username": row[1],
-        }
-
         if (row):
-            return {"found": True, "user": User}
-        return {"found": False, "user": null}
+            # Instantiate User obj
+            User = {
+                "id": row[0], 
+                "email": row[2], 
+                "username": row[1],
+            }
+
+            # jwt token payload
+            payload = {
+                "id": row[0],
+                "username": row[1],
+                "email": row[2],
+                "exp": datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=12),
+                "iat": datetime.datetime.now(datetime.timezone.utc)
+            }
+
+            # generate token
+            token = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
+            print(token)
+
+            return {"found": True, "user": User, "token": token}
+        return {"found": False, "user": None, "token": None}
+
+def get_current_user(auth_header):
+    if not auth_header or not auth_header.startswith("Bearer "):
+        return None
+    
+    # extract token
+    token = auth_header.split(" ")[1]
+
+    try:
+        # decode token
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        return payload
+    except jwt.ExpiredSignatureError:
+        return {"error": "Token has expired"}
+    except jwt.InvalidTokenError:
+        return {"error": "Invalid token"}
+
+@app.route("/user", methods=["GET"])
+def user():
+    header = request.headers.get("Authorization")
+    token_data = get_current_user(header)
+
+    if not token_data or "error" in token_data:
+        return jsonify({"message": token_data.get("error", "Unauthorized")}), 401
+    
+    # if valid token, get the user info
+    User = {
+                "id": token_data.get("id"), 
+                "email": token_data.get("email"), 
+                "username": token_data.get("username"),
+            }
+    return User, 200
+
 
 if __name__ == "__main__":
     app.run(debug=True)

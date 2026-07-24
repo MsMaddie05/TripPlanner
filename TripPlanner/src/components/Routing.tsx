@@ -1,5 +1,3 @@
-import { useAuth, type User } from "./AuthProvider";
-
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Navigate, Outlet } from 'react-router-dom';
 
@@ -13,32 +11,41 @@ import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 
 interface ProtectedRouteProps {
-  isUser: User | null;
+  token: String | null;
 }
 
-const ProtectedRoute = ({ isUser } : ProtectedRouteProps ) => {
-  if (!isUser) {
+const ProtectedRoute = ({ token } : ProtectedRouteProps ) => {
+  if (!token) {
     return <Navigate to="/login" replace />
   }
 
   return <Outlet />
 }
 
+const UnLoggedInRoute = ({ token } : ProtectedRouteProps ) => {
+  if (token) {
+    return <Navigate to="/home" replace />
+  }
+
+  return <Outlet />
+}
+
 function Routing() {
-  const { user }= useAuth();
 
   return (
     <>
         <Router>
-            {user && (<div>
+            {sessionStorage.getItem("token") && (<div>
                 <NavBar />
                 </div>)
             }
             <Routes>
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<SignUp />} />
-
-                <Route element={<ProtectedRoute isUser={user} />}>
+                <Route element={<UnLoggedInRoute token={sessionStorage.getItem("token")} />} >
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/signup" element={<SignUp />} />
+                </Route>
+                
+                <Route element={<ProtectedRoute token={sessionStorage.getItem("token")} />}>
                     <Route path="/" element={<Home />} />
                     <Route path="/home" element={<Home />} />
                     <Route path="/createtrip" element= {<CreateTrip />} />

@@ -27,6 +27,7 @@ const Login = () => {
             if (data.found) {
                 setUser(data.user);
                 navigate('/home');
+                sessionStorage.setItem("token", data.token);
             }
             else {
                 window.alert("Email or password was not found. Please try again")
