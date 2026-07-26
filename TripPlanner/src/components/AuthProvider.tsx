@@ -10,6 +10,8 @@ export interface User{
 interface AuthContextType{
     user: User | null;
     setUser: (user: User | null) => void;
+    token: string | null;
+    login: (token: string) => void;
     logout: () => void;
 }
 
@@ -18,10 +20,17 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({children}: {children: ReactNode}){
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState<User | null>(null);
+    const [token, setToken] = useState<string | null>(sessionStorage.getItem("token"));
+
+    const login = (newToken: string) => {
+        sessionStorage.setItem("token", newToken);
+        setToken(newToken); //trigger re-render
+    }
 
     const logout = () => {
         setUser(null);
-        sessionStorage.setItem("token", "");
+        sessionStorage.removeItem("token");
+        setToken(null);
     };
 
     useEffect(() => {
@@ -63,7 +72,7 @@ export function AuthProvider({children}: {children: ReactNode}){
     }
 
     return(
-        <AuthContext.Provider value ={{user, setUser, logout}}>
+        <AuthContext.Provider value ={{user, setUser, token, login, logout}}>
             {children}
         </AuthContext.Provider>
     )

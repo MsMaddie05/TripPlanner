@@ -10,6 +10,8 @@ import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 
+import { useAuth } from './AuthProvider';
+
 interface ProtectedRouteProps {
   token: String | null;
 }
@@ -31,21 +33,22 @@ const UnLoggedInRoute = ({ token } : ProtectedRouteProps ) => {
 }
 
 function Routing() {
+    const { token } = useAuth();
 
   return (
     <>
         <Router>
-            {sessionStorage.getItem("token") && (<div>
+            {token && (<div>
                 <NavBar />
                 </div>)
             }
             <Routes>
-                <Route element={<UnLoggedInRoute token={sessionStorage.getItem("token")} />} >
+                <Route element={<UnLoggedInRoute token={token} />} >
                   <Route path="/login" element={<Login />} />
                   <Route path="/signup" element={<SignUp />} />
                 </Route>
                 
-                <Route element={<ProtectedRoute token={sessionStorage.getItem("token")} />}>
+                <Route element={<ProtectedRoute token={token} />}>
                     <Route path="/" element={<Home />} />
                     <Route path="/home" element={<Home />} />
                     <Route path="/createtrip" element= {<CreateTrip />} />

@@ -5,7 +5,7 @@ import styles from './Login.module.css';
 
 
 const Login = () => {
-    const { setUser } = useAuth();
+    const { setUser, login } = useAuth();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -26,8 +26,7 @@ const Login = () => {
 
             if (data.found) {
                 setUser(data.user);
-                navigate('/home');
-                sessionStorage.setItem("token", data.token);
+                login(data.token);
             }
             else {
                 window.alert("Email or password was not found. Please try again")

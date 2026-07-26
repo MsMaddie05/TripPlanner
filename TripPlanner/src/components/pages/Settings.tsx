@@ -1,6 +1,17 @@
+import { useAuth } from '../AuthProvider'
+
 const Settings = () => {
+    const { logout } = useAuth();
+
+    const logOutClicked = () => {
+        logout();
+    }
+
     return (
-        <div>Settings~</div>
+        <div>
+            <h1>Settings~</h1>
+            <button onClick={logOutClicked}>Log Out</button>
+        </div>
     )
 }
 
