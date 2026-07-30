@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import db_creation as db
-from sqlalchemy import insert, select
+from sqlalchemy import insert, select, delete
 import datetime
 import jwt
 import os
@@ -24,9 +24,9 @@ def database_testing():
         res = conn.execute(
             insert(db.user_table),
             [
-                {"user_id": 1, "username": "bob_2", "email": "bob_kent@gmail.com", "password": "password123", "profile_pic": "src/images/img1.png"},
-                {"user_id": 2, "username": "charlie_3", "email": "charlie_livingston@gmail.com", "password": "michaeljackson_rules", "profile_pic": "src/images/img2.png"},
-                {"user_id": 3, "username": "ross_4", "email": "ross_lark@gmail.com", "password": "heavymetal647", "profile_pic": "src/images/img3.png"},
+                {"user_id": 1, "username": "bob_2", "email": "bob_kent@gmail.com", "password": "password123", "profile_pic": "src/images/img1.jpg"},
+                {"user_id": 2, "username": "charlie_3", "email": "charlie_livingston@gmail.com", "password": "michaeljackson_rules", "profile_pic": "src/images/img2.jpg"},
+                {"user_id": 3, "username": "ross_4", "email": "ross_lark@gmail.com", "password": "heavymetal647", "profile_pic": "src/images/img3.jpg"},
             ]
         )
         conn.commit()
@@ -54,6 +54,7 @@ def login():
                 "id": row[0], 
                 "email": row[2], 
                 "username": row[1],
+                "profile": row[3],
             }
 
             # jwt token payload
@@ -91,7 +92,7 @@ def signup():
         if row:
             return {"success": False, "user": None, "token": None}     
 
-        stmt = insert(db.user_table).values(username=username, email=email, password=password, profile_pic="src/images/img1.png")
+        stmt = insert(db.user_table).values(username=username, email=email, password=password, profile_pic="src/images/img1.jpg")
 
         result = conn.execute(stmt)
         conn.commit()
@@ -101,6 +102,7 @@ def signup():
             "id": result.inserted_primary_key[0], 
             "email": email, 
             "username": username,
+            "profile": "src/images/img1.jpg",
         }
 
         # jwt token payload
@@ -118,6 +120,15 @@ def signup():
 
         return {"success": True, "user": User, "token": token}, 200
 
+@app.route('/deleting')
+def deleteUser():
+    with db.engine.connect() as conn:
+        res = conn.execute(
+            delete(db.user_table).where(db.user_table.c.user_id == 1)
+        )
+        conn.commit()
+
+    return "Deleted users!"
 
 def get_current_user(auth_header):
     if not auth_header or not auth_header.startswith("Bearer "):
@@ -142,12 +153,16 @@ def user():
 
     if not token_data or "error" in token_data:
         return jsonify({"message": token_data.get("error", "Unauthorized")}), 401
+
+    with db.engine.connect() as conn:
+        row = conn.execute(select(user_table).where(user_id = token_data.get("id")))
     
     # if valid token, get the user info
     User = {
                 "id": token_data.get("id"), 
                 "email": token_data.get("email"), 
                 "username": token_data.get("username"),
+                "profile": row[3],
             }
     return User, 200
 

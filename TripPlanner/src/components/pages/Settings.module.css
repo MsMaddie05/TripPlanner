@@ -1,0 +1,26 @@
+.settingsContainer{
+    padding: 10px;    
+}
+.userCredentials{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    
+    padding: 20px;
+    background-color: var(--container-dark);
+    color: var(--text-light);
+    border-radius: 5px;
+    width: fit-content;
+}
+#settingsLogOut{
+    border: none;
+    border-radius: 5px;
+    background-color: var(--container-light);
+    color: var(--text-dark);
+    padding: 10px;
+    margin-top: 15px;
+}
+#settingsLogOut:hover{
+    background-color: var(--container-dark);
+    color: var(--text-light);
+}
