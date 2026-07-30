@@ -120,16 +120,6 @@ def signup():
 
         return {"success": True, "user": User, "token": token}, 200
 
-@app.route('/deleting')
-def deleteUser():
-    with db.engine.connect() as conn:
-        res = conn.execute(
-            delete(db.user_table).where(db.user_table.c.user_id == 1)
-        )
-        conn.commit()
-
-    return "Deleted users!"
-
 def get_current_user(auth_header):
     if not auth_header or not auth_header.startswith("Bearer "):
         return None
@@ -155,7 +145,7 @@ def user():
         return jsonify({"message": token_data.get("error", "Unauthorized")}), 401
 
     with db.engine.connect() as conn:
-        row = conn.execute(select(user_table).where(user_id = token_data.get("id")))
+        row = conn.execute(select(db.user_table).where(db.user_table.c.user_id == token_data.get("id"))).first()
     
     # if valid token, get the user info
     User = {
@@ -166,6 +156,22 @@ def user():
             }
     return User, 200
 
+
+@app.route('/deleting')
+def deleteUser():
+    header = request.headers.get("Authorization")
+    token_data = get_current_user(header)
+
+    if not token_data or "error" in token_data:
+        return jsonify({"message": token_data.get("error", "Unauthorized")}), 401
+
+    with db.engine.connect() as conn:
+        res = conn.execute(
+            delete(db.user_table).where(db.user_table.c.user_id == token_data.get("id"))
+        )
+        conn.commit()
+
+    return jsonify({"message": "Deleted user successfully"}), 200
 
 if __name__ == "__main__":
     app.run(debug=True)
