@@ -17,6 +17,14 @@
     padding: 80px;
     border-radius: 10px;
 }
+
+.inputContainer {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    gap: 15px;
+}
+
 #loginHeader{
     margin: 0;
     margin-bottom: 15px;
@@ -25,7 +33,6 @@
     border: none;
     border-radius: 5px;
     padding: 10px;
-    min-width: 25vh;
 
     color: var(--text-dark);
 }
@@ -34,19 +41,6 @@
 }
 .loginInputs:focus{
     outline: none;
-}
-#loginSubmitBtn{
-    border: none;
-    border-radius: 5px;
-    padding: 10px;
-    min-width: 25vh;
-
-    background-color: var(--container-dark);
-    color: var(--text-light);
-}
-#loginSubmitBtn:hover{
-    background-color: var(--main-bg);
-    color: var(--text-dark);
 }
 
 .link {

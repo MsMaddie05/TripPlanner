@@ -1,6 +1,7 @@
 import styles from "./SignUp.module.css"
 import { useState } from 'react';
 import { useAuth } from '../AuthProvider';
+import Button from "../miniComponents/Button";
 
 
 const SignUp = () => {
@@ -43,7 +44,7 @@ const SignUp = () => {
                 <input type="text" className = {styles.signUpInputs} id= "email" name="email" placeholder="Email" onChange={(e)=> {setEmail(e.target.value)}}></input>
                 <input type="text" className = {styles.signUpInputs} id= "username" name="username" placeholder="Username" onChange={(e)=> {setUsername(e.target.value)}}></input>
                 <input type="password" className = {styles.signUpInputs} id= "password" name="password" placeholder="Password" onChange={(e)=> {setPassword(e.target.value)}}></input>
-                <button id = {styles["signUpSubmitBtn"]} onClick={onSubmit} type="submit">Submit</button>
+                <Button theme="medium" onClick={onSubmit}>Submit</Button>
             </div>
         </div>
     )

@@ -1,6 +1,13 @@
 .settingsContainer{
-    padding: 10px;    
+    padding: 30px;   
 }
+
+.credentialsContainer {
+    display: flex;
+    flex-direction: row;
+    gap:15px;
+}
+
 .userCredentials{
     display: flex;
     flex-direction: column;
@@ -12,15 +19,34 @@
     border-radius: 5px;
     width: fit-content;
 }
-#settingsLogOut{
-    border: none;
-    border-radius: 5px;
+
+.changeCredentials{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    
+    padding: 20px;
     background-color: var(--container-light);
     color: var(--text-dark);
-    padding: 10px;
-    margin-top: 15px;
+    border-radius: 5px;
+    width: fit-content;
 }
-#settingsLogOut:hover{
-    background-color: var(--container-dark);
-    color: var(--text-light);
+
+.credentialsInputGrid {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 10px;
+}
+
+.buttonContainer {
+    display: flex;
+    flex-direction: column;
+    width:fit-content;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.title {
+    font-weight:bold;
+    font-size:larger;
 }

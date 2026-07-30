@@ -17,6 +17,14 @@
     padding: 80px;
     border-radius: 10px;
 }
+
+.inputContainer {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    gap: 15px;
+}
+
 #signUpHeader{
     margin: 0;
     margin-bottom: 15px;

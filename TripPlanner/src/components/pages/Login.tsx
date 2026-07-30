@@ -1,6 +1,6 @@
 import {useState} from "react";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthProvider";
+import Button from "../miniComponents/Button";
 import styles from './Login.module.css';
 
 
@@ -9,7 +9,7 @@ const Login = () => {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const navigate = useNavigate();
+
 
     async function onClickSubmit() {
         try{
@@ -42,9 +42,11 @@ const Login = () => {
         <div className = {styles.pageWrapper}>
             <div className = {styles.loginContainer}>
                 <h1 id = {styles["loginHeader"]}>Login</h1>
-                <input type="text" className = {styles.loginInputs} id= "email" name="email" placeholder="Email" onChange={(e)=> {setEmail(e.target.value)}}></input>
-                <input type="password" className = {styles.loginInputs} id= "password" name="password" placeholder="Password" onChange={(e)=> {setPassword(e.target.value)}}></input>
-                <button id = {styles["loginSubmitBtn"]} type="submit" onClick={onClickSubmit}>Submit</button>
+                <div className={styles.inputContainer}>
+                    <input type="text" className = {styles.loginInputs} id= "email" name="email" placeholder="Email" onChange={(e)=> {setEmail(e.target.value)}}></input>
+                    <input type="password" className = {styles.loginInputs} id= "password" name="password" placeholder="Password" onChange={(e)=> {setPassword(e.target.value)}}></input>
+                    <Button theme="medium" onClick={onClickSubmit}>Submit</Button>
+                </div>
                 <a className={styles.link} href={"/signup"}>No account? Sign up</a>
             </div>
         </div>
