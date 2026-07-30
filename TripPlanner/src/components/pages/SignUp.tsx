@@ -1,11 +1,40 @@
 import styles from "./SignUp.module.css"
 import { useState } from 'react';
+import { useAuth } from '../AuthProvider';
 
 
 const SignUp = () => {
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const { setUser, login } = useAuth();
+
+    async function onSubmit() {
+        try {
+            const response = await fetch("http://localhost:5000/signup", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({email, username, password})
+            })
+
+            const data = await response.json();
+
+            console.log(data)
+
+            if (data.success == true) {
+                setUser(data.user);
+                login(data.token);
+            }
+            else {
+                window.alert("This username or email is taken, please try again.");
+            }
+        }
+        catch (error) {
+            console.error(error);
+        }
+    }
 
     return (
         <div className = {styles.pageWrapper}>
@@ -14,7 +43,7 @@ const SignUp = () => {
                 <input type="text" className = {styles.signUpInputs} id= "email" name="email" placeholder="Email" onChange={(e)=> {setEmail(e.target.value)}}></input>
                 <input type="text" className = {styles.signUpInputs} id= "username" name="username" placeholder="Username" onChange={(e)=> {setUsername(e.target.value)}}></input>
                 <input type="password" className = {styles.signUpInputs} id= "password" name="password" placeholder="Password" onChange={(e)=> {setPassword(e.target.value)}}></input>
-                <button id = {styles["signUpSubmitBtn"]}type="submit">Submit</button>
+                <button id = {styles["signUpSubmitBtn"]} onClick={onSubmit} type="submit">Submit</button>
             </div>
         </div>
     )

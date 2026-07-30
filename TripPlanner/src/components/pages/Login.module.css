@@ -49,3 +49,14 @@
     color: var(--text-dark);
 }
 
+.link {
+    color: var(--text-dark);
+}
+
+.link:hover {
+    color: var(--text-medium);
+}
+
+.link:visited {
+    color: var(--text-dark);
+}

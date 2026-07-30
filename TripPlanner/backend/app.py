@@ -72,6 +72,53 @@ def login():
             return {"found": True, "user": User, "token": token}
         return {"found": False, "user": None, "token": None}
 
+@app.route('/signup', methods=["POST"])
+def signup():
+    data = request.get_json()
+    email = data.get('email')
+    username = data.get('username')
+    password = data.get('password')
+
+    # testing
+    print(email, username, password)
+
+    with db.engine.connect() as conn:
+        # check for unique username / email
+        row = conn.execute(
+            select(db.user_table).where((db.user_table.c.email == email) | (db.user_table.c.username == username))
+        ).first()
+        print(row)
+        if row:
+            return {"success": False, "user": None, "token": None}     
+
+        stmt = insert(db.user_table).values(username=username, email=email, password=password, profile_pic="src/images/img1.png")
+
+        result = conn.execute(stmt)
+        conn.commit()
+
+        # Instantiate User obj
+        User = {
+            "id": result.inserted_primary_key[0], 
+            "email": email, 
+            "username": username,
+        }
+
+        # jwt token payload
+        payload = {
+            "id": result.inserted_primary_key[0], 
+            "email": email, 
+            "username": username,
+            "exp": datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=12),
+            "iat": datetime.datetime.now(datetime.timezone.utc)
+        }
+
+        # generate token
+        token = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
+        print(token)
+
+        return {"success": True, "user": User, "token": token}, 200
+
+
 def get_current_user(auth_header):
     if not auth_header or not auth_header.startswith("Bearer "):
         return None

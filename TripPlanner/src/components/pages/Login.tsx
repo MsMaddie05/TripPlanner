@@ -45,6 +45,7 @@ const Login = () => {
                 <input type="text" className = {styles.loginInputs} id= "email" name="email" placeholder="Email" onChange={(e)=> {setEmail(e.target.value)}}></input>
                 <input type="password" className = {styles.loginInputs} id= "password" name="password" placeholder="Password" onChange={(e)=> {setPassword(e.target.value)}}></input>
                 <button id = {styles["loginSubmitBtn"]} type="submit" onClick={onClickSubmit}>Submit</button>
+                <a className={styles.link} href={"/signup"}>No account? Sign up</a>
             </div>
         </div>
     )
