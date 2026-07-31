@@ -29,19 +29,6 @@
     margin: 0;
     margin-bottom: 15px;
 }
-.loginInputs{
-    border: none;
-    border-radius: 5px;
-    padding: 10px;
-
-    color: var(--text-dark);
-}
-.loginInputs::placeholder{
-    color: var(--text-dark);
-}
-.loginInputs:focus{
-    outline: none;
-}
 
 .link {
     color: var(--text-dark);

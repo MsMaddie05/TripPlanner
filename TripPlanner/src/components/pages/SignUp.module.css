@@ -17,43 +17,15 @@
     padding: 80px;
     border-radius: 10px;
 }
-
 .inputContainer {
     display: flex;
     flex-direction: column;
     width: 200px;
     gap: 15px;
 }
-
 #signUpHeader{
     margin: 0;
     margin-bottom: 15px;
 }
-.signUpInputs{
-    border: none;
-    border-radius: 5px;
-    padding: 10px;
-    min-width: 25vh;
 
-    color: var(--text-dark);
-}
-.signUpInputs::placeholder{
-    color: var(--text-dark);
-}
-.signUpInputs:focus{
-    outline: none;
-}
-#signUpSubmitBtn{
-    border: none;
-    border-radius: 5px;
-    padding: 10px;
-    min-width: 25vh;
-
-    background-color: var(--container-dark);
-    color: var(--text-light);
-}
-#signUpSubmitBtn:hover{
-    background-color: var(--main-bg);
-    color: var(--text-dark);
-}
 

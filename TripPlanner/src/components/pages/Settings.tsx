@@ -1,12 +1,81 @@
+import { useState } from 'react'
 import { useAuth } from '../AuthProvider'
 import styles from './Settings.module.css'
 import Button from "../miniComponents/Button"
+import Input from "../miniComponents/Input"
 
 const Settings = () => {
-    const { user, logout, token } = useAuth();
+    const { user, setUser, login, logout, token } = useAuth();
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
 
     const logOutClicked = () => {
         logout();
+    }
+
+    async function editUsername() {
+        try{
+            const response = await fetch("http://localhost:5000/changeUsername",{
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({username})
+                }
+            )
+
+            const data = await response.json();
+            console.log(data);
+
+            if(data.message == "changed user"){
+                console.log("inside success statement")
+                setUser(data.user);
+                login(data.token);
+
+                setUsername("");
+            }
+            else if(data.message == "user taken"){
+                console.log("inside user taken statement")
+                window.alert("Username already taken");
+            }
+            else{
+                console.log("inside logout statement")
+                logout();
+            }
+        }
+        catch(error){
+            console.error(error, "Error in chaning username");
+        }
+    }
+
+    async function editPassword() {
+        try{
+            const response = await fetch("http://localhost:5000/changePassword",{
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({password})
+                }
+            )
+
+            const data = await response.json();
+            console.log(data);
+
+            if(data.message == "changed password"){
+                console.log("inside success statement")
+                setPassword("");
+            }
+            else{
+                console.log("inside logout statement")
+                logout();
+            }
+        }
+        catch(error){
+            console.error(error, "Error in chaning username");
+        }
     }
 
     async function deleteClicked() {
@@ -38,10 +107,10 @@ const Settings = () => {
             <div className={styles.changeCredentials}>
                 <div className={styles.title}>Edit Credentials</div>
                 <div className={styles.credentialsInputGrid}>
-                    <input type="text" id="changeUsername" className={styles.changeInput} placeholder="Change Username"></input>
-                    <Button theme="medium" onClick={()=>{}} >Submit</Button>
-                    <input type="text" id="changeEmail" className={styles.changeInput} placeholder='Change Password'></input>
-                    <Button theme="medium" onClick={()=>{}} >Submit</Button>
+                    <Input type = "text" placeholder = "Change Username" value = {username} onChange = {setUsername}></Input>
+                    <Button theme="medium" onClick={editUsername} >Submit</Button>
+                    <Input type = "password" placeholder = "Change Password" value = {password} onChange = {setPassword}></Input>
+                    <Button theme="medium" onClick={editPassword}>Submit</Button>
                 </div>
             </div>
             </div>

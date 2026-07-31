@@ -1,8 +1,8 @@
 import {useState} from "react";
 import { useAuth } from "../AuthProvider";
 import Button from "../miniComponents/Button";
+import Input from "../miniComponents/Input"
 import styles from './Login.module.css';
-
 
 const Login = () => {
     const { setUser, login } = useAuth();
@@ -33,7 +33,7 @@ const Login = () => {
             }
         }
         catch (error){
-            console.error("Fetching user failed");
+            console.error(error, "Fetching user failed");
         }
 
     }
@@ -43,8 +43,8 @@ const Login = () => {
             <div className = {styles.loginContainer}>
                 <h1 id = {styles["loginHeader"]}>Login</h1>
                 <div className={styles.inputContainer}>
-                    <input type="text" className = {styles.loginInputs} id= "email" name="email" placeholder="Email" onChange={(e)=> {setEmail(e.target.value)}}></input>
-                    <input type="password" className = {styles.loginInputs} id= "password" name="password" placeholder="Password" onChange={(e)=> {setPassword(e.target.value)}}></input>
+                    <Input type = "text" placeholder = {"Email"} value = {email} onChange = {setEmail}></Input>
+                    <Input type = "password" placeholder = {"Password"} value = {password} onChange = {setPassword}></Input>
                     <Button theme="medium" onClick={onClickSubmit}>Submit</Button>
                 </div>
                 <a className={styles.link} href={"/signup"}>No account? Sign up</a>

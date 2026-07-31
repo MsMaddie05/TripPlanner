@@ -1,0 +1,13 @@
+.inputs{
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+
+    color: var(--text-dark);
+}
+.inputs::placeholder{
+    color: var(--text-dark);
+}
+.inputs:focus{
+    outline: none;
+}

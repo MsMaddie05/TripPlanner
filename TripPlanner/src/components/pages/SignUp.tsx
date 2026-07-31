@@ -2,7 +2,7 @@ import styles from "./SignUp.module.css"
 import { useState } from 'react';
 import { useAuth } from '../AuthProvider';
 import Button from "../miniComponents/Button";
-
+import Input from "../miniComponents/Input"
 
 const SignUp = () => {
     const [email, setEmail] = useState("");
@@ -41,10 +41,12 @@ const SignUp = () => {
         <div className = {styles.pageWrapper}>
             <div className = {styles.signUpContainer}>
                 <h1 id = {styles["signUpHeader"]}>Sign Up</h1>
-                <input type="text" className = {styles.signUpInputs} id= "email" name="email" placeholder="Email" onChange={(e)=> {setEmail(e.target.value)}}></input>
-                <input type="text" className = {styles.signUpInputs} id= "username" name="username" placeholder="Username" onChange={(e)=> {setUsername(e.target.value)}}></input>
-                <input type="password" className = {styles.signUpInputs} id= "password" name="password" placeholder="Password" onChange={(e)=> {setPassword(e.target.value)}}></input>
-                <Button theme="medium" onClick={onSubmit}>Submit</Button>
+                <div className = {styles.inputContainer}>
+                    <Input type = "text" placeholder = "Email" value = {email} onChange = {setEmail}></Input>
+                    <Input type = "text" placeholder = "Username" value = {username} onChange = {setUsername}></Input>
+                    <Input type = "password" placeholder = "Password" value = {password} onChange = {setPassword}></Input>
+                    <Button theme="medium" onClick={onSubmit}>Submit</Button>
+                </div>
             </div>
         </div>
     )

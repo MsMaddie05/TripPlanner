@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import db_creation as db
-from sqlalchemy import insert, select, delete
+from sqlalchemy import insert, select, delete, update
 import datetime
 import jwt
 import os
@@ -156,6 +156,81 @@ def user():
             }
     return User, 200
 
+@app.route('/changeUsername', methods=["POST"])
+def editUsername():
+    header = request.headers.get("Authorization")
+    token_data = get_current_user(header)
+
+    data = request.get_json()
+    newUsername = data.get("username")
+    print(f"New user: {newUsername}")
+
+    if not token_data or "error" in token_data:
+        print("Error: no token")
+        return jsonify({"message": "no token", "user": None, "token": None})
+
+    with db.engine.connect() as conn:
+        # check for unique username 
+        row = conn.execute(
+            select(db.user_table).where(db.user_table.c.username == newUsername)
+        ).first()
+        print(row)
+        if row:
+            return {"message": "user taken", "user": None, "token": None}  
+
+    with db.engine.connect() as conn:
+        # update username
+        conn.execute(
+            update(db.user_table)
+            .where(db.user_table.c.user_id == token_data.get("id"))
+            .values(username = newUsername)
+        )
+        conn.commit()
+        print("Success: User updated")
+
+        User = {
+            "id": token_data.get("id"),
+            "email": token_data.get("email"),
+            "username": newUsername,
+            "profile": token_data.get("profile"),
+        }
+
+        payload = {
+            "id": token_data.get("id"), 
+            "email": token_data.get("email"), 
+            "username": newUsername,
+            "exp": datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=12),
+            "iat": datetime.datetime.now(datetime.timezone.utc)
+        }
+
+        token = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
+
+        return jsonify({"message": "changed user", "user": User, "token": token})
+
+@app.route('/changePassword', methods=["POST"])
+def editPassword():
+    header = request.headers.get("Authorization")
+    token_data = get_current_user(header)
+
+    data = request.get_json()
+    newPassword = data.get("password")
+    print(f"New password: {newPassword}")
+
+    if not token_data or "error" in token_data:
+        print("Error: no token")
+        return jsonify({"message": "no token"})
+
+    with db.engine.connect() as conn:
+        # update password
+        conn.execute(
+            update(db.user_table)
+            .where(db.user_table.c.user_id == token_data.get("id"))
+            .values(password = newPassword)
+        )
+        conn.commit()
+        print("Success: Password updated")
+
+        return jsonify({"message": "changed password"})
 
 @app.route('/deleting')
 def deleteUser():
