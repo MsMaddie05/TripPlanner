@@ -2,6 +2,19 @@
     padding: 30px;   
 }
 
+.topHeader {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+
+    align-items: center;
+}
+
+#settingsHeader {
+    margin: none;
+    padding: none;
+}
+
 .credentialsContainer {
     display: flex;
     flex-direction: row;

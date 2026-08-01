@@ -3,14 +3,29 @@ import { useAuth } from '../AuthProvider'
 import styles from './Settings.module.css'
 import Button from "../miniComponents/Button"
 import Input from "../miniComponents/Input"
+import ProfilePic from '../miniComponents/ProfilePic'
+import { type profileOptions } from '../AuthProvider'
 
 const Settings = () => {
     const { user, setUser, login, logout, token } = useAuth();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [profilePic, setProfilePic] = useState(user ? user.profile : "img1")
 
     const logOutClicked = () => {
         logout();
+    }
+
+    function isValidProfilePic(value : string) : value is profileOptions {
+        return ["img1" , "img2" , "img3" , "img4" , "img5" , "img6"].includes(value);
+    }
+    const setProfilePicAny = (string: string) => {
+        if (isValidProfilePic(string)) {
+            setProfilePic(string);
+        }
+        else {
+            setProfilePic("img1");
+        }
     }
 
     async function editUsername() {
@@ -95,25 +110,39 @@ const Settings = () => {
         }
     }
 
+
+
     return (
         <div className = {styles.settingsContainer}>
-            <h1 id = {styles["settingsHeader"]}>Settings</h1>
+            <div className={styles.topHeader}>
+                <h1 id = {styles["settingsHeader"]}>Settings</h1>
+                <ProfilePic imgName={profilePic} size={50} />            
+            </div>
             <div className={styles.credentialsContainer}>
                 <div className = {styles.userCredentials}>
                     <div className={styles.title}>Credentials</div>
                     <div>Username: {user && user.username}</div>
                     <div>Email: {user && user.email}</div>
                 </div>
-            <div className={styles.changeCredentials}>
-                <div className={styles.title}>Edit Credentials</div>
-                <div className={styles.credentialsInputGrid}>
-                    <Input type = "text" placeholder = "Change Username" value = {username} onChange = {setUsername}></Input>
-                    <Button theme="medium" onClick={editUsername} >Submit</Button>
-                    <Input type = "password" placeholder = "Change Password" value = {password} onChange = {setPassword}></Input>
-                    <Button theme="medium" onClick={editPassword}>Submit</Button>
+                <div className={styles.changeCredentials}>
+                    <div className={styles.title}>Edit Credentials</div>
+                    <div className={styles.credentialsInputGrid}>
+                        <Input type = "text" placeholder = "Change Username" value = {username} onChange = {setUsername}></Input>
+                        <Button theme="medium" onClick={editUsername} >Submit</Button>
+                        <Input type = "password" placeholder = "Change Password" value = {password} onChange = {setPassword}></Input>
+                        <Button theme="medium" onClick={editPassword}>Submit</Button>
+                    </div>
                 </div>
             </div>
-            </div>
+            <label htmlFor="profile-pic-select"></label>
+            <select name="profile-pic" id="profile-pic-select" onChange={(e)=> {setProfilePicAny(e.target.value)}}>
+                <option value="img1">Yosemite Mountain</option>
+                <option value="img2">Sunset Mountain</option>
+                <option value="img3">Snowy Mountain</option>
+                <option value="img4">Flower Fields</option>
+                <option value="img5">Pink Art</option>
+                <option value="img6">Ocean</option>
+            </select>
             <div className = {styles.buttonContainer}>
                 <Button theme="light" onClick={logOutClicked}>Logout</Button>
                 <Button theme="dark" onClick={deleteClicked}>Delete Account</Button>

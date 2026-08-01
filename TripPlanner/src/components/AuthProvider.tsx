@@ -1,11 +1,13 @@
 import {createContext, useContext, useState, useEffect, type ReactNode } from "react";
 import LoadingPage from "./pages/LoadingPage";
 
+export type profileOptions = "img1" | "img2" | "img3" | "img4" | "img5" | "img6";
+
 export interface User{
     id: number;
     email: string;
     username: string;
-    profile: string;
+    profile: profileOptions;
 }
 
 interface AuthContextType{

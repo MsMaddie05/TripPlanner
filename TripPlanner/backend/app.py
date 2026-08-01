@@ -24,9 +24,9 @@ def database_testing():
         res = conn.execute(
             insert(db.user_table),
             [
-                {"user_id": 1, "username": "bob_2", "email": "bob_kent@gmail.com", "password": "password123", "profile_pic": "src/images/img1.jpg"},
-                {"user_id": 2, "username": "charlie_3", "email": "charlie_livingston@gmail.com", "password": "michaeljackson_rules", "profile_pic": "src/images/img2.jpg"},
-                {"user_id": 3, "username": "ross_4", "email": "ross_lark@gmail.com", "password": "heavymetal647", "profile_pic": "src/images/img3.jpg"},
+                {"user_id": 1, "username": "bob_2", "email": "bob_kent@gmail.com", "password": "password123", "profile_pic": "img1"},
+                {"user_id": 2, "username": "charlie_3", "email": "charlie_livingston@gmail.com", "password": "michaeljackson_rules", "profile_pic": "img2"},
+                {"user_id": 3, "username": "ross_4", "email": "ross_lark@gmail.com", "password": "heavymetal647", "profile_pic": "img3"},
             ]
         )
         conn.commit()
@@ -54,7 +54,7 @@ def login():
                 "id": row[0], 
                 "email": row[2], 
                 "username": row[1],
-                "profile": row[3],
+                "profile": row[4],
             }
 
             # jwt token payload
@@ -92,7 +92,7 @@ def signup():
         if row:
             return {"success": False, "user": None, "token": None}     
 
-        stmt = insert(db.user_table).values(username=username, email=email, password=password, profile_pic="src/images/img1.jpg")
+        stmt = insert(db.user_table).values(username=username, email=email, password=password, profile_pic="img1")
 
         result = conn.execute(stmt)
         conn.commit()
@@ -102,7 +102,7 @@ def signup():
             "id": result.inserted_primary_key[0], 
             "email": email, 
             "username": username,
-            "profile": "src/images/img1.jpg",
+            "profile": "img1",
         }
 
         # jwt token payload
@@ -152,7 +152,7 @@ def user():
                 "id": token_data.get("id"), 
                 "email": token_data.get("email"), 
                 "username": token_data.get("username"),
-                "profile": row[3],
+                "profile": row[4],
             }
     return User, 200
 
