@@ -51,6 +51,61 @@
     gap: 10px;
 }
 
+.editProfilePicContainer{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 15px;
+
+    margin-top: 30px;
+}
+
+.dropDownContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+
+    width: 175px;
+    text-align: center;
+}
+
+#viewOptionsContainer{
+    background-color: var(--container-light);
+    padding: 3px;
+}
+
+#viewOptionsContainer:hover{
+    background-color: var(--container-dark);
+    color: var(--text-light);
+}
+
+.listContainer{
+    position: absolute;
+    top: 100%;
+    max-height: 100px;
+    overflow-y: auto;
+    z-index: 999;
+
+    background-color: var(--container-light);
+    width: 100%;
+
+}
+
+.listItem{
+    list-style: none;
+    padding: 3px;
+}
+
+.listItem:hover{
+    background-color: var(--container-dark);
+    color: var(--text-light);
+}
+
+.hidden{
+    display: none;
+}
+
 .buttonContainer {
     display: flex;
     flex-direction: column;

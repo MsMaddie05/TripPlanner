@@ -4,28 +4,17 @@ import styles from './Settings.module.css'
 import Button from "../miniComponents/Button"
 import Input from "../miniComponents/Input"
 import ProfilePic from '../miniComponents/ProfilePic'
-import { type profileOptions } from '../AuthProvider'
+import clsx from 'clsx';
 
 const Settings = () => {
     const { user, setUser, login, logout, token } = useAuth();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [profilePic, setProfilePic] = useState(user ? user.profile : "img1")
+    const [showList, setShowList] = useState(false);
 
     const logOutClicked = () => {
         logout();
-    }
-
-    function isValidProfilePic(value : string) : value is profileOptions {
-        return ["img1" , "img2" , "img3" , "img4" , "img5" , "img6"].includes(value);
-    }
-    const setProfilePicAny = (string: string) => {
-        if (isValidProfilePic(string)) {
-            setProfilePic(string);
-        }
-        else {
-            setProfilePic("img1");
-        }
     }
 
     async function editUsername() {
@@ -110,7 +99,9 @@ const Settings = () => {
         }
     }
 
-
+    const onClickViewOptions = () => {
+        setShowList(!showList);
+    }
 
     return (
         <div className = {styles.settingsContainer}>
@@ -134,15 +125,21 @@ const Settings = () => {
                     </div>
                 </div>
             </div>
-            <label htmlFor="profile-pic-select"></label>
-            <select name="profile-pic" id="profile-pic-select" onChange={(e)=> {setProfilePicAny(e.target.value)}}>
-                <option value="img1">Yosemite Mountain</option>
-                <option value="img2">Sunset Mountain</option>
-                <option value="img3">Snowy Mountain</option>
-                <option value="img4">Flower Fields</option>
-                <option value="img5">Pink Art</option>
-                <option value="img6">Ocean</option>
-            </select>
+            <div className = {styles.editProfilePicContainer}>
+                <div className ={styles.title}>Edit Profile Pic:</div>
+                <div className = {styles.dropDownContainer}>
+                    <div id = {styles.viewOptionsContainer} onClick = {onClickViewOptions}>View Options</div>
+                    <div className = {clsx(styles.listContainer, {[styles.hidden]: showList})} onClick = {()=> {}}>
+                        <li className = {styles.listItem} onClick = {() => setProfilePic("img1")}>Yosemite Moutain</li>
+                        <li className = {styles.listItem} onClick = {() => setProfilePic("img2")}>Sunset Mountain</li>
+                        <li className = {styles.listItem} onClick = {() => setProfilePic("img3")}>Snowy Mountain</li>
+                        <li className = {styles.listItem} onClick = {() => setProfilePic("img4")}>Flower Fields</li>
+                        <li className = {styles.listItem} onClick = {() => setProfilePic("img5")}>Pink Art</li>
+                        <li className = {styles.listItem} onClick = {() => setProfilePic("img6")}>Ocean</li>
+                    </div>
+                </div>
+                <Button theme = "dark" onClick={()=>{}}>Save</Button>
+            </div>
             <div className = {styles.buttonContainer}>
                 <Button theme="light" onClick={logOutClicked}>Logout</Button>
                 <Button theme="dark" onClick={deleteClicked}>Delete Account</Button>
