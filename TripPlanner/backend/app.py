@@ -60,8 +60,6 @@ def login():
             # jwt token payload
             payload = {
                 "id": row[0],
-                "username": row[1],
-                "email": row[2],
                 "exp": datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=12),
                 "iat": datetime.datetime.now(datetime.timezone.utc)
             }
@@ -108,8 +106,6 @@ def signup():
         # jwt token payload
         payload = {
             "id": result.inserted_primary_key[0], 
-            "email": email, 
-            "username": username,
             "exp": datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=12),
             "iat": datetime.datetime.now(datetime.timezone.utc)
         }
@@ -150,8 +146,8 @@ def user():
     # if valid token, get the user info
     User = {
                 "id": token_data.get("id"), 
-                "email": token_data.get("email"), 
-                "username": token_data.get("username"),
+                "email": row[2], 
+                "username": row[1],
                 "profile": row[4],
             }
     return User, 200
@@ -188,17 +184,19 @@ def editUsername():
         conn.commit()
         print("Success: User updated")
 
+        row = conn.execute(
+            select(db.user_table).where(db.user_table.c.username == newUsername)
+        ).first()
+
         User = {
             "id": token_data.get("id"),
-            "email": token_data.get("email"),
+            "email": row[2],
             "username": newUsername,
-            "profile": token_data.get("profile"),
+            "profile": row[4],
         }
 
         payload = {
             "id": token_data.get("id"), 
-            "email": token_data.get("email"), 
-            "username": newUsername,
             "exp": datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=12),
             "iat": datetime.datetime.now(datetime.timezone.utc)
         }
