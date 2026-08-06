@@ -83,6 +83,33 @@ const Settings = () => {
         }
     }
 
+    async function saveOnClicked(){
+        try{
+            const response = await fetch("http://localhost:5000/savePic", {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({profilePic})
+            })
+
+            const data = await response.json();
+            console.log(data);
+
+            if(data.message == "changed user"){
+                setUser(data.user);
+                window.alert("Saved profile picture!");
+            }
+            else{
+                logout();
+            }
+        }
+        catch(error){
+            console.error(error, "Failed to save new profile pic");
+        }
+    }
+
     async function deleteClicked() {
         const result = window.confirm("WARNING: Are you sure you want to delete your account?")
 
@@ -125,7 +152,7 @@ const Settings = () => {
             <div className = {styles.editProfilePicContainer}>
                 <div className ={styles.title}>Edit Profile Pic:</div>
                 <Dropdown setter={setProfilePic} name="Pic Options" closes={false} options={profilePics} />
-                <Button theme = "dark" onClick={()=>{}}>Save</Button>
+                <Button theme = "dark" onClick={saveOnClicked}>Save</Button>
             </div>
             <div className = {styles.buttonContainer}>
                 <Button theme="light" onClick={logOutClicked}>Logout</Button>

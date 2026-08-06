@@ -230,6 +230,42 @@ def editPassword():
 
         return jsonify({"message": "changed password"})
 
+@app.route('/savePic', methods=["POST"])
+def editProfilePic():
+    header = request.headers.get("Authorization")
+    token_data = get_current_user(header)
+
+    data = request.get_json()
+    newProfilePic = data.get("profilePic")
+    print(f"New pic: {newProfilePic}")
+
+    if not token_data or "error" in token_data:
+        print("Error: no token")
+        return jsonify({"message": "no token", "user": None})
+
+    with db.engine.connect() as conn:
+        # update user profile pic
+        conn.execute(
+            update(db.user_table)
+            .where(db.user_table.c.user_id == token_data.get("id"))
+            .values(profile_pic = newProfilePic)
+        )
+        conn.commit()
+        print("Success: User profile updated")
+
+        row = conn.execute(
+            select(db.user_table).where(db.user_table.c.user_id == token_data.get("id"))
+        ).first()
+
+        User = {
+            "id": token_data.get("id"),
+            "email": row[2],
+            "username": row[1],
+            "profile": newProfilePic,
+        }
+
+        return jsonify({"message": "changed user", "user": User})
+
 @app.route('/deleting')
 def deleteUser():
     header = request.headers.get("Authorization")

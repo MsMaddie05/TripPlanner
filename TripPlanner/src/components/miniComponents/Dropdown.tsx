@@ -30,7 +30,7 @@ export default function Dropdown({setter, options, name, closes}: props) {
             <div id = {styles.viewOptionsContainer} onClick = {onClickViewOptions}>{dropdownName}</div>
             <div className = {clsx(styles.listContainer, {[styles.hidden]: !showList})}>
                 {options.map(
-                    (element) => <li className = {styles.listItem} onClick = {()=>onClickOption(element)}>{element.name}</li>
+                    (element) => <li key = {element.id} className = {styles.listItem} onClick = {()=>onClickOption(element)}>{element.name}</li>
                     )
                 }
             </div>
